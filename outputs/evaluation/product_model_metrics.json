@@ -1,0 +1,11 @@
+{
+  "selected_model": "Logistic Regression",
+  "cv_accuracy": 0.2267,
+  "cv_f1_macro": 0.1885,
+  "cv_log_loss": 1.6798,
+  "test_accuracy": 0.16,
+  "test_f1_macro": 0.1165,
+  "test_log_loss": 1.7074,
+  "n_rows": 150,
+  "n_features": 20
+}
