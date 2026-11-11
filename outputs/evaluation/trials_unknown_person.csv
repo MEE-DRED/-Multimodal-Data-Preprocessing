@@ -1,0 +1,10 @@
+protocol,probe_file,true_id,held_out_member,score_member_2,score_member_3,best_match,score,authorised,user_id,score_member_1
+leave_one_member_out_unknown,member_1_neutral.jpg,unknown,member_1,0.4965905444796982,0.374281019293823,member_2,0.4965905444796982,False,,
+leave_one_member_out_unknown,member_1_smiling.jpg,unknown,member_1,0.3991998005011723,0.3866860986906542,member_2,0.3991998005011723,False,,
+leave_one_member_out_unknown,member_1_surprised.jpg,unknown,member_1,0.5489875202604451,0.46832105639863997,member_2,0.5489875202604451,False,,
+leave_one_member_out_unknown,member_2_neutral.jpg,unknown,member_2,,0.3101843482428569,member_1,0.4685591026975355,False,,0.4685591026975355
+leave_one_member_out_unknown,member_2_smiling.jpg,unknown,member_2,,0.31255546714517024,member_1,0.46917702515153714,False,,0.46917702515153714
+leave_one_member_out_unknown,member_2_surprised.jpg,unknown,member_2,,0.29768216803477876,member_1,0.47722453927792524,False,,0.47722453927792524
+leave_one_member_out_unknown,member_3_neutral.jpg,unknown,member_3,0.29416702647301163,,member_1,0.422964602856193,False,,0.422964602856193
+leave_one_member_out_unknown,member_3_smiling.jpg,unknown,member_3,0.35490952571930545,,member_1,0.4534194675946156,False,,0.4534194675946156
+leave_one_member_out_unknown,member_3_surprised.jpg,unknown,member_3,0.29425559463552936,,member_1,0.31691626483005053,False,,0.31691626483005053

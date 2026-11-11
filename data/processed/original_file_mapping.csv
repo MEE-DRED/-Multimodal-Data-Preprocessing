@@ -1,0 +1,10 @@
+zip_relative_path,original_extension,status,member_id,expression,canonical_path
+images/Member 1/neutral.jpg,.jpg,ok,member_1,neutral,member_1/member_1_neutral.jpg
+images/Member 1/smiling.jpg,.jpg,ok,member_1,smiling,member_1/member_1_smiling.jpg
+images/Member 1/surprised.jpg,.jpg,ok,member_1,surprised,member_1/member_1_surprised.jpg
+images/Member 2/neutral.jepg,.jepg,ok,member_2,neutral,member_2/member_2_neutral.jpg
+images/Member 2/smiling.jepg,.jepg,ok,member_2,smiling,member_2/member_2_smiling.jpg
+images/Member 2/surprised.jepg,.jepg,ok,member_2,surprised,member_2/member_2_surprised.jpg
+images/Member 3/neutral.jpeg,.jpeg,ok,member_3,neutral,member_3/member_3_neutral.jpg
+images/Member 3/smiling.jpeg,.jpeg,ok,member_3,smiling,member_3/member_3_smiling.jpg
+images/Member 3/surprised.jpeg,.jpeg,ok,member_3,surprised,member_3/member_3_surprised.jpg

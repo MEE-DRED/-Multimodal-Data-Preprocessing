@@ -1,0 +1,30 @@
+{
+  "model_name": "Facenet512",
+  "detector_backend": "retinaface",
+  "embedding_dim": 512,
+  "n_original_images": 9,
+  "n_augmented_images": 36,
+  "enrolled_member_ids": [
+    "member_1",
+    "member_2",
+    "member_3"
+  ],
+  "created_utc": "2026-11-11T11:00:20+00:00",
+  "library_versions": {
+    "deepface": "0.0.104",
+    "tensorflow": "2.21.0",
+    "tf-keras": "2.21.0",
+    "opencv-python-headless": "5.0.0.93",
+    "numpy": "2.4.6",
+    "pandas": "2.2.3",
+    "scikit-learn": "1.6.1",
+    "pillow": "11.3.0"
+  },
+  "templates_sha256": "cac7790e71b8247a5e38a5cca165fba265976d946199815e87e8a11e0a19272f",
+  "status": "academic prototype - not for real financial authentication",
+  "template_member_ids": [
+    "member_1",
+    "member_2",
+    "member_3"
+  ]
+}

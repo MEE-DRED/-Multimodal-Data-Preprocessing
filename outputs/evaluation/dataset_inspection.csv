@@ -1,0 +1,10 @@
+member_id,expression,image_filename,file_size_kb,sha256,format,width,height,mode,channels,exif_orientation,readable,error,duplicate_of
+member_1,neutral,member_1_neutral.jpg,365.5,7573e4d73da7c283878ac7f245ad3e9887e7813e7e1cd1588cc926c879968ce2,JPEG,958,933,RGB,3,1,True,,
+member_1,smiling,member_1_smiling.jpg,349.1,d7400ddebd1011823c0a816577f490a54072ccd63673d25eda6367789327f384,JPEG,959,1031,RGB,3,1,True,,
+member_1,surprised,member_1_surprised.jpg,329.3,14d953c16ee0ea78d236dd62a5f1bd58dcefbbbce14bf50708907a5b2ca05358,JPEG,865,865,RGB,3,1,True,,
+member_2,neutral,member_2_neutral.jpg,2031.7,0b313057380623cde77ebce31e39093f8db76c701506845528fbb4d315d052f1,MPO,3024,4032,RGB,3,1,True,,
+member_2,smiling,member_2_smiling.jpg,2052.7,b6aa16fd963a5d84bd648a5dcdf988051f0a335af83dcf1fad31685d8eaa7d31,MPO,3024,4032,RGB,3,1,True,,
+member_2,surprised,member_2_surprised.jpg,1998.5,b2538ab531ba93d0ee184850ea60ef6c71290c543cb544ffdebe4b24bd8fdad9,MPO,3024,4032,RGB,3,1,True,,
+member_3,neutral,member_3_neutral.jpg,78.3,33027ec7392bec4193200458700d7484db17b46b9bdb8c97591da2f00d7c7c7b,JPEG,810,1080,RGB,3,1,True,,
+member_3,smiling,member_3_smiling.jpg,86.8,d68dc89a166cf7d53233861c9490a00650ec766edf64b33a64ca915143612e5d,JPEG,810,1080,RGB,3,1,True,,
+member_3,surprised,member_3_surprised.jpg,93.2,cc4f7970ce8fbdc32cf963b418d34896f87b29ec60eaccc9644bcbc2a1c1168a,JPEG,810,1080,RGB,3,1,True,,

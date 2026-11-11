@@ -1,0 +1,138 @@
+{
+  "threshold": 0.7,
+  "unknown_person_test": {
+    "threshold": 0.7,
+    "n_unknown_images": 9,
+    "n_processed": 9,
+    "n_failed": 0,
+    "correct_rejections": 9,
+    "false_acceptances": 0,
+    "FAR": 0.0,
+    "FAR_ci95": [
+      0.0,
+      0.2991527535509594
+    ],
+    "correct_rejection_rate": 1.0,
+    "max_best_score": 0.6264622743400492,
+    "mean_best_score": 0.5260476372714256,
+    "min_best_score": 0.36101658911309875,
+    "margin_below_threshold": 0.07353772565995076
+  },
+  "initial_binary": {
+    "n": 18,
+    "TP": 9,
+    "FN": 0,
+    "FP": 0,
+    "TN": 9,
+    "accuracy": 1.0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0,
+    "FAR": 0.0,
+    "FRR": 0.0
+  },
+  "unknown_only": {
+    "n": 9,
+    "correct_rejections": 9,
+    "false_acceptances": 0,
+    "accuracy": 1.0,
+    "FAR": 0.0,
+    "precision": null,
+    "recall": null,
+    "f1": null,
+    "FRR": null
+  },
+  "combined_binary": {
+    "n": 27,
+    "TP": 9,
+    "FN": 0,
+    "FP": 0,
+    "TN": 18,
+    "accuracy": 1.0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0,
+    "FAR": 0.0,
+    "FRR": 0.0
+  },
+  "combined_four_class": {
+    "n_samples": 27,
+    "accuracy": 1.0,
+    "labels": [
+      "member_1",
+      "member_2",
+      "member_3",
+      "unknown"
+    ],
+    "confusion_matrix": [
+      [
+        3,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        3,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        3,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        18
+      ]
+    ],
+    "per_class": [
+      {
+        "label": "member_1",
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "support": 3
+      },
+      {
+        "label": "member_2",
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "support": 3
+      },
+      {
+        "label": "member_3",
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "support": 3
+      },
+      {
+        "label": "unknown",
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "support": 18
+      }
+    ],
+    "macro_precision": 1.0,
+    "macro_recall": 1.0,
+    "macro_f1": 1.0
+  },
+  "leakage_checks": {
+    "templates in memory unchanged": true,
+    "templates array hash unchanged (before == after)": true,
+    "face_templates.npy file hash unchanged": true,
+    "templates hash == templates_sha256 in metadata": true,
+    "image_features.csv hash unchanged": true,
+    "enrolled feature rows unchanged": true,
+    "no unknown filename in enrolled feature table": true,
+    "only enrolled members in feature table": true,
+    "unknown crops stored apart from enrolled crops": true
+  }
+}

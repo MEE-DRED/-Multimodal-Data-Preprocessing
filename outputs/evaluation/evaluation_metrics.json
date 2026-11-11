@@ -1,0 +1,107 @@
+{
+  "closed_set": {
+    "n": 9,
+    "top1_accuracy": 1.0
+  },
+  "verification": {
+    "threshold": 0.7,
+    "n_genuine": 9,
+    "n_impostor": 18,
+    "n_unknown": 9,
+    "FRR": 0.0,
+    "FRR_ci95": [
+      0.0,
+      0.2991527535509594
+    ],
+    "genuine_accept": 9,
+    "FAR_enrolled_impostor": 0.0,
+    "FAR_enrolled_impostor_ci95": [
+      0.0,
+      0.1758845505823749
+    ],
+    "impostor_reject": 18,
+    "FAR_unknown": 0.0,
+    "FAR_unknown_ci95": [
+      0.0,
+      0.2991527535509594
+    ],
+    "unknown_reject": 9,
+    "min_genuine_score": 0.9061386988532678,
+    "max_impostor_score": 0.5318780516443475,
+    "max_unknown_best_score": 0.5489875202604451,
+    "scores_separable": true
+  },
+  "open_set": {
+    "n_samples": 18,
+    "accuracy": 1.0,
+    "labels": [
+      "member_1",
+      "member_2",
+      "member_3",
+      "unknown"
+    ],
+    "confusion_matrix": [
+      [
+        3,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        3,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        3,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        9
+      ]
+    ],
+    "per_class": [
+      {
+        "label": "member_1",
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "support": 3
+      },
+      {
+        "label": "member_2",
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "support": 3
+      },
+      {
+        "label": "member_3",
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "support": 3
+      },
+      {
+        "label": "unknown",
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "support": 9
+      }
+    ],
+    "macro_precision": 1.0,
+    "macro_recall": 1.0,
+    "macro_f1": 1.0
+  },
+  "augmented_robustness": {
+    "n": 36,
+    "accepted_as_correct_member": 1.0
+  }
+}
