@@ -1,5 +1,5 @@
 """
-product recommendation component.
+product recommendation component
 
 What it does
 ------------
@@ -9,20 +9,31 @@ What it does
 3. Loads the trained model bundle (models/product_model.joblib).
 4. Builds the feature row of the requested customer and returns the predicted product.
 
+Quick test from the repository root:
+    python src/product_model.py --customer 100
 """
 from __future__ import annotations
 
 import argparse
 import json
+import sys
+import warnings
 from functools import lru_cache
 from pathlib import Path
 
 import joblib
 import numpy as np
 import pandas as pd
+import sklearn
+from sklearn.compose import ColumnTransformer
+from sklearn.exceptions import InconsistentVersionWarning
+from sklearn.impute import SimpleImputer
+from sklearn.linear_model import LogisticRegression
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import LabelEncoder, OneHotEncoder, StandardScaler
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-DRIVE_PROJECT_DIR = Path("/content/drive/MyDrive/formative2")     
+DRIVE_PROJECT_DIR = Path("/content/drive/MyDrive/formative2")     # used automatically on Colab
 
 DATA_DIR_CANDIDATES = [REPO_ROOT / "data" / "raw", Path("data/raw"),
                        DRIVE_PROJECT_DIR / "data" / "raw"]
@@ -58,12 +69,12 @@ def _find_model(model_path: str | Path | None = None) -> Path:
                             "Run the notebook (Section 11.2) to create models/product_model.joblib.")
 
 
-# --------------------------------------------------------------------------- cleaning 
+# --------------------------------------------------------------------------- cleaning (same as notebook)
 def _clean_transactions(raw: pd.DataFrame) -> pd.DataFrame:
     t = raw.copy().rename(columns={"customer_id_legacy": "customer_id"})
     for c in ["customer_id", "transaction_id", "purchase_amount", "customer_rating"]:
         t[c] = pd.to_numeric(t[c], errors="coerce")
-    if pd.api.types.is_numeric_dtype(t["purchase_date"]):                 
+    if pd.api.types.is_numeric_dtype(t["purchase_date"]):                 # Excel serial numbers
         t["purchase_date"] = pd.to_datetime(t["purchase_date"], unit="D", origin="1899-12-30")
     else:
         t["purchase_date"] = pd.to_datetime(t["purchase_date"], errors="coerce")
@@ -125,10 +136,90 @@ def _load_data(data_dir: str | None = None):
     return trans, _aggregate_social(social)
 
 
+# --------------------------------------------------------------------------- model training (same as notebook)
+RANDOM_STATE = 42
+MODEL_NUMERIC = ["avg_engagement", "avg_interest", "pct_Positive", "pct_Neutral", "pct_Negative",
+                 "n_platforms", "has_social_profile", "engagement_interest",
+                 "purchase_month", "purchase_weekday", "is_weekend",
+                 "prev_purchases", "prev_avg_amount", "prev_avg_rating",
+                 "prev_Books", "prev_Clothing", "prev_Electronics", "prev_Groceries", "prev_Sports"]
+MODEL_CATEGORICAL = ["top_platform"]
+MODEL_FEATURES = MODEL_NUMERIC + MODEL_CATEGORICAL          # the 20 features kept by the feature selection
+
+
+def build_training_table(data_dir: str | Path | None = None) -> pd.DataFrame:
+    """Merged table with the leakage-safe engineered features (notebook Sections 5 and 7)."""
+    trans, social_agg = _load_data(str(data_dir) if data_dir else None)
+    merged = trans.merge(social_agg, on="customer_id", how="left", indicator=True, validate="many_to_one")
+    merged["has_social_profile"] = (merged["_merge"] == "both").astype(int)
+    merged = merged.drop(columns="_merge")
+    merged["top_platform"] = merged["top_platform"].fillna("Unknown")
+    assert len(merged) == len(trans), "merge changed the number of rows"
+
+    df = merged.sort_values(["purchase_date", "transaction_id"]).reset_index(drop=True)
+    df["purchase_month"] = df["purchase_date"].dt.month
+    df["purchase_weekday"] = df["purchase_date"].dt.day_of_week
+    df["is_weekend"] = (df["purchase_weekday"] >= 5).astype(int)
+    df["engagement_interest"] = df["avg_engagement"] * df["avg_interest"] / 100
+
+    g = df.groupby("customer_id")                       # history = earlier purchases only
+    df["prev_purchases"] = g.cumcount()
+    df["prev_avg_amount"] = g["purchase_amount"].transform(lambda x: x.shift().expanding().mean())
+    df["prev_avg_rating"] = g["customer_rating"].transform(lambda x: x.shift().expanding().mean())
+
+    dummies = pd.get_dummies(df["product_category"]).astype(int)
+    prev_cat = dummies.groupby(df["customer_id"]).cumsum() - dummies
+    prev_cat.columns = [f"prev_{c}" for c in prev_cat.columns]
+    return pd.concat([df, prev_cat], axis=1)
+
+
+def train_and_save(model_path: str | Path | None = None, data_dir: str | Path | None = None) -> dict:
+    """Train the final model (Logistic Regression, C = 0.02) on all rows and save the bundle."""
+    df = build_training_table(data_dir)
+    missing = [c for c in MODEL_FEATURES if c not in df.columns]
+    assert not missing, f"missing feature columns: {missing}"
+    prev_cat_cols = [c for c in df.columns if c.startswith("prev_") and c.replace("prev_", "", 1)
+                     in set(df["product_category"])]
+
+    le = LabelEncoder()
+    y = le.fit_transform(df["product_category"])
+    preprocessor = ColumnTransformer([
+        ("num", Pipeline([("imp", SimpleImputer(strategy="median", add_indicator=True)),
+                          ("sc", StandardScaler())]), MODEL_NUMERIC),
+        ("cat", Pipeline([("imp", SimpleImputer(strategy="most_frequent")),
+                          ("oh", OneHotEncoder(handle_unknown="ignore"))]), MODEL_CATEGORICAL),
+    ])
+    pipe = Pipeline([("prep", preprocessor),
+                     ("model", LogisticRegression(max_iter=3000, C=0.02, random_state=RANDOM_STATE))])
+    pipe.fit(df[MODEL_FEATURES], y)
+
+    bundle = {"pipeline": pipe, "label_encoder": le, "feature_columns": MODEL_FEATURES,
+              "numeric": MODEL_NUMERIC, "categorical": MODEL_CATEGORICAL, "model_name": "Logistic Regression",
+              "classes": list(le.classes_), "prev_cat_cols": prev_cat_cols}
+    target = Path(model_path) if model_path else MODEL_PATH_CANDIDATES[0]
+    target.parent.mkdir(parents=True, exist_ok=True)
+    joblib.dump(bundle, target)
+    print(f"[product_model] Model trained on {len(df)} rows (scikit-learn {sklearn.__version__}) "
+          f"and saved to {target}", file=sys.stderr)
+    return bundle
+
+
 @lru_cache(maxsize=4)
 def load_model(model_path: str | None = None) -> dict:
-    """Load the saved bundle (pipeline, label encoder, feature list, class names)."""
-    return joblib.load(_find_model(model_path))
+    """
+    Load the saved bundle (pipeline, label encoder, feature list, class names).
+    If the file is missing, corrupted, or was saved with another scikit-learn version,
+    the model is rebuilt from the raw data and saved again.
+    """
+    try:
+        found = _find_model(model_path)
+        with warnings.catch_warnings():
+            warnings.simplefilter("error", InconsistentVersionWarning)      # a version mismatch = rebuild
+            return joblib.load(found)
+    except Exception as exc:                                                 # missing / other version / corrupt
+        print(f"[product_model] Saved model not usable ({type(exc).__name__}); "
+              "rebuilding it from the raw data...", file=sys.stderr)
+        return train_and_save(model_path)
 
 
 # --------------------------------------------------------------------------- public API
@@ -165,8 +256,8 @@ def build_features(customer_id: int, data_dir: str | Path | None = None,
         row["has_social_profile"] = 0
 
     row["purchase_month"] = as_of.month
-    row["purchase_weekday"] = as_of.dayofweek
-    row["is_weekend"] = int(as_of.dayofweek >= 5)
+    row["purchase_weekday"] = as_of.day_of_week
+    row["is_weekend"] = int(as_of.day_of_week >= 5)
     row["prev_purchases"] = len(cust_tx)
     row["prev_avg_amount"] = cust_tx["purchase_amount"].mean() if len(cust_tx) else np.nan
     row["prev_avg_rating"] = cust_tx["customer_rating"].mean() if len(cust_tx) else np.nan
@@ -212,16 +303,20 @@ def _main() -> None:
     parser = argparse.ArgumentParser(description="Predict the product a customer is likely to buy.")
     parser.add_argument("--customer", type=int, help="customer ID to predict for")
     parser.add_argument("--list", action="store_true", help="list the known customer IDs")
+    parser.add_argument("--retrain", action="store_true", help="rebuild and save the model from the raw data")
     parser.add_argument("--data-dir", default=None, help="folder with the raw data files")
     parser.add_argument("--model", default=None, help="path to product_model.joblib")
     args = parser.parse_args()
 
+    if args.retrain:
+        train_and_save(args.model, args.data_dir)
+        load_model.cache_clear()
     if args.list:
         ids = known_customer_ids(args.data_dir)
         print(f"{len(ids)} known customers: {ids}")
     if args.customer is not None:
         print(json.dumps(predict_product(args.customer, args.data_dir, args.model), indent=2))
-    if not args.list and args.customer is None:
+    if not (args.list or args.retrain) and args.customer is None:
         parser.print_help()
 
 
