@@ -1,0 +1,12 @@
+,Initial evaluation (enrolled members),Unknown-person test,Combined
+Samples evaluated,18,9,27
+Genuine accepted (TP),9,n/a,9
+Genuine rejected (FN),0,n/a,0
+Unknown rejected (TN),9,9,18
+Unknown accepted (FP),0,0,0
+FAR,0.000,0.000,0.000
+FRR,0.000,n/a,0.000
+Accuracy,1.000,1.000,1.000
+Precision,1.000,n/a,1.000
+Recall,1.000,n/a,1.000
+F1-score,1.000,n/a,1.000
