@@ -2,19 +2,31 @@
 
 **Facial Verification | Voice Verification | Product Recommendation**
 
+**Student names:** Mildred Ewenrim Ebomah | Auriane Kalisa | Kellia Kamikazi
+
+**Course:** Machine Learning Pipeline
+
+**Formative 2 | Group 2**
+
+**Submission date:** 13th November, 2026
+
+**Tasksheet:** (https://docs.google.com/spreadsheets/d/1QLY1SvqKDOapZ9fpcCXAJ4j_hFUzEuUi_7xmiswcR3o/edit?usp=sharing)
+
+**Google Drive:** https://drive.google.com/drive/folders/1vth01DOtrsO7X4u9l-iSe-IXh_ggRMyO?usp=sharing
+
 ## 1. Project Overview
 
 This project focuses on developing a multimodal system that combines facial verification, voice verification and product recommendation.
 
-The system is designed to verify a user's identity through their face and voice before predicting the product category they are most likely to purchase.
+The system verifies a user's identity through their face and voice before predicting the product category they are most likely to purchase.
 
 The project is divided into three main tasks, with each team member responsible for developing one component:
 
 | Task | Component | Main responsibility |
 |---|---|---|
-| Task 1 – Member 1 | Data Merge, Preprocessing and Product Recommendation | Prepare customer transaction and social-profile data, develop features and build a product prediction model. |
-| Task 2 – Member 2 | Image Preprocessing and Facial Verification | Process facial images, extract facial embeddings and verify enrolled users. |
-| Task 3 – Member 3 | Audio Processing and Voice Verification | Process voice recordings, extract audio features, generate voice profiles and verify speakers. |
+| Task 1 – Member 1 (Kellia) | Data Merge, Preprocessing and Product Recommendation | Prepare customer transaction and social-profile data, develop features and build a product prediction model. |
+| Task 2 – Member 2 (Mildred) | Image Preprocessing and Facial Verification | Process facial images, extract facial embeddings and verify enrolled users. |
+| Task 3 – Member 3 (Auriane) | Audio Processing and Voice Verification | Process voice recordings, extract audio features, generate voice profiles, and verify speakers. |
 
 The intended system workflow is:
 
