@@ -1,0 +1,14 @@
+# Methodology (Task 2)
+
+1. **Image loading.** Pillow decodes each file, applies EXIF orientation and converts to 3-channel RGB `uint8`. Unreadable files raise a controlled error (never a crash in `verify_face`).
+2. **Preprocessing.** Long side capped at 1024 px (Member 2's 12-MP photos would otherwise slow detection without benefit). Originals are preserved.
+3. **Face detection.** DeepFace with a configurable backend. The notebook tries `retinaface → mtcnn → yunet → opencv` and keeps the first one that finds a face in all originals; the choice is stored in `models/face/face_config.json`. If several faces are found, the largest is used.
+4. **Alignment and crop.** DeepFace aligns using eye landmarks, crops, and the face is resized to the model input, 160×160 (saved to `outputs/processed_images/` for inspection).
+5. **Normalisation.** Performed inside DeepFace using FaceNet's own scheme. We intentionally add no extra scaling (double-normalising would corrupt embeddings).
+6. **Augmentation.** Rotation +8°, horizontal flip, grayscale (3-ch), brightness ×1.2 – mild so identity is preserved. Augmented copies are always tied to their original via `original_filename`.
+7. **Embedding extraction.** Pretrained **FaceNet-512** (`Facenet512`) → 512-d vector. No training or fine-tuning: nine photos are far too few to train a deep network. Chosen because it is a standard, well-documented pretrained model available through a maintained library and runs on CPU.
+8. **Template creation.** Per member: mean of L2-normalised embeddings (originals + their augmentations), re-normalised to unit length.
+9. **Similarity.** Cosine similarity between the probe embedding and each template (scale-invariant, standard for FaceNet-style embeddings).
+10. **Threshold.** Fixed at **0.70 cosine similarity (= distance 0.30)**, DeepFace's documented default for Facenet512/cosine; the notebook cross-checks it at runtime. It is *not* tuned on our nine photos (tuning on this little data would overfit); the threshold sweep in the notebook is exploratory only. A real deployment would calibrate on many consented genuine/impostor pairs.
+11. **Decision.** Identity matching = best-scoring template. Authorisation = best score ≥ threshold, otherwise `verified=False, user_id=None`. Unknown people are not forced to a member. Failures (missing file, unreadable image, no face, model unavailable) return `verified=False` with a status code.
+12. **Evaluation.** Leakage-safe protocols (details in `evaluation_report.md`): leave-one-expression-out (genuine + enrolled-impostor), leave-one-member-out (real unknown-person trials), and a separate augmented-probe robustness check. Augmented copies never cross partitions; probes are never part of the templates scoring them. Metrics: accuracy, precision, recall, F1, confusion matrix, FAR, FRR with Wilson 95 % intervals.
