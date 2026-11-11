@@ -1,0 +1,10 @@
+{
+  "model_name": "Facenet512",
+  "detector_backend": "retinaface",
+  "similarity_metric": "cosine",
+  "threshold": 0.7,
+  "max_image_side": 1024,
+  "align": true,
+  "embedding_dim": 512,
+  "template_method": "mean_of_l2_normalised_embeddings"
+}
