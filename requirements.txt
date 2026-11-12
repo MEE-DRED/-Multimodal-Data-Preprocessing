@@ -8,3 +8,4 @@ joblib
 openpyxl
 librosa
 soundfile
+deepface
