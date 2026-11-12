@@ -6,4 +6,5 @@ matplotlib
 seaborn
 joblib
 openpyxl
-ipykernel
+librosa
+soundfile
