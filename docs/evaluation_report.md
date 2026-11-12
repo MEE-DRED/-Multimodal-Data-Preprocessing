@@ -24,12 +24,46 @@ Rules: an original and its augmentations are never split across enrolment/test; 
 
 ## Metric meanings
 * **FRR** – genuine attempts rejected. **FAR** – impostor/unknown attempts accepted (separately for enrolled impostors and unknown persons).
-* **Genuine acceptance / rejection** – counts of correct accept / correct reject decisions.
+* **Genuine acceptance/rejection** – counts of correct accept / correct reject decisions.
 * **Accuracy, precision, recall, F1** – on the final 4-way decision (member_1/2/3 or *unknown*=rejected); macro-averaged F1 given.
 * 95 % Wilson confidence intervals are reported because n is 9–18 per group.
 
 ## Results
-*To be filled from `outputs/evaluation/evaluation_summary.md` after the Colab run (figures `05`–`09` in `outputs/figures/`).* Figures already generated: `01_original_images.png`, `02_dataset_distribution.png`, `04_augmentation_examples.png`. Figures `03` and `05`–`09` need the face model and are created by the notebook.
+
+### 1. Dataset Inspection and Augmentation
+The dataset contained 9 original facial images from 3 enrolled members. No missing, corrupt, or duplicate images were identified.
+
+Four augmentation techniques were applied: rotation, horizontal flipping, grayscale conversion, and brightness adjustment. This generated 36 additional images, bringing the total to 45 image records.
+
+### 2. Failure Handling
+Seven unit tests were conducted using a stand-in embedder to test different failure scenarios, including missing files, unreadable images, face detection failures, and embedding errors. All seven tests passed.
+
+### 3. Facial Verification Results
+The system used FaceNet512 for feature extraction, RetinaFace for face detection, and a cosine similarity threshold of 0.70.
+
+The initial evaluation produced:
+- Closed-set accuracy: **100%** (9/9).
+- False Rejection Rate (FRR): **0%**.
+- False Acceptance Rate (FAR): **0%** across 18 enrolled-impostor trials.
+- Four-class accuracy and macro-F1: **100%**.
+
+### 4. Unknown-Person Testing
+The system was tested with 9 images from 3 people who were not enrolled in the system. All 9 images were processed successfully and correctly rejected.
+
+- Correct rejections: 9
+- False acceptances: 0
+- Unknown-person FAR: **0%**
+- Highest similarity score: 0.626, below the 0.70 threshold.
+
+These images were tested separately and were not added to the enrolled dataset or templates.
+
+### 5. Combined Evaluation
+The combined binary evaluation recorded 100% accuracy, precision, recall and F1-score across 27 samples. Both FAR and FRR were 0%.
+
+### 6. Summary
+The system correctly identified enrolled users and rejected unknown individuals across the available test samples. However, the dataset was small, with only 3 enrolled members and 3 unknown individuals. Therefore, these results do not establish that the system is reliable for real-world deployment. Further testing with more individuals and images captured under different conditions is required.
+
+Loss was not reported because the system uses a pretrained face-embedding model and threshold-based verification rather than training a new classifier.
 
 ## Limitations
 Only 3 identities × 3 originals; single session each; capture conditions differ per member; unknown-person tests in the leave-one-member-out protocol use just two enrolled identities; no liveness; no demographic analysis. Perfect scores on this set would be weak evidence of real-world performance. Needed: multiple sessions per member, ≥ 20–50 consented unknown people, independent held-out genuine photos.
